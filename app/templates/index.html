@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <section class="header">
+    <h2 class="title">Text Summarizer</h2>
+  </section>
+  <hr />
+
+  <div class="content">
+    <h2>
+      {% if summary %}
+      Summary
+      {% else %}
+        Paste in any article you want to summarize
+      {% endif %}
+    </h2>
+    <body>
+      {% if summary %}
+      {{ summary }}
+      {% else %}
+
+      {% endif %}
+    </body>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="text area">
+          {{ form.text.label }} {{ form.text(cols="150") }}
+        </div>
+      </div>
+      <div class="row">
+        <button type="submit" class="button-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+{% endblock body %}
+
+{% block js %}
+  <script type="text/javascript">
+
+  </script>
+{% endblock js %}
