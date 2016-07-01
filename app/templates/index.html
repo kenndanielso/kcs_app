@@ -1,38 +1,49 @@
 {% extends 'base.html' %}
+{% block header %}
+<style>
+body {
+  font-family: "Georgia";
+}
+</style>
+{% endblock header %}
+
 
 {% block body %}
   <section class="header">
-    <h2 class="title">Text Summarizer</h2>
+    <h2 class="title">Knowledge Content Summarizer</h2>
   </section>
   <hr />
 
   <div class="content">
-    <h2>
-      {% if summary %}
-      Summary
+      {% if data_table %}
+        <h4>Results</h4><br />
       {% else %}
-        Paste in any article you want to summarize
-      {% endif %}
-    </h2>
-    <body>
-      {% if summary %}
-      {{ summary }}
-      {% else %}
+        <h4>Please add query search terms and date</h4><br />
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="row">
+            <div class="three columns">
+              <label for="query_terms">Query Terms:</label>
+              <input  id="query_terms" name="query_terms" type="text" value="">
+            </div>
+            <div class="three columns">
+              <label for="query_date">Earliest Document Date:</label>
+              <input id="query_date" name="query_date" type="text" value="">
+            </div>
+            <div class="three columns">
+              <label for="size"># of Docs to be returned:</label>
+              <input id="size" name="size" type="text" value="">   
+            </div>
+          </div>
+          <button type="submit" class="button-primary">Submit</button>
+        </form>
+      {% endif %}      
 
-      {% endif %}
-    </body>
-    <form method="POST">
-      {{ form.hidden_tag() }}
-      <div class="row">
-        <div class="text area">
-          {{ form.text.label }} {{ form.text(cols="150") }}
-        </div>
-      </div>
-      <div class="row">
-        <button type="submit" class="button-primary">Submit</button>
-      </div>
-    </form>
+    <div>
+    {% if data_table %} {{data_table | safe}} {% endif %}
+    </div>
   </div>
+
 {% endblock body %}
 
 {% block js %}

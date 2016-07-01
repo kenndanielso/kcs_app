@@ -11,18 +11,21 @@ import numpy as numpy
 import pandas as pandas
 import seaborn as sns
 from . import app
-from . import summarizer
 from .config import TEMP_PLOT_DIR
+from . import kcs_process_query
 
 class DisplayForm(Form):
-	text = fields.TextAreaField('Text:',validators=[Required()])
+	query_terms = fields.TextField('Query Terms:',validators=[Required()])
+	query_date = fields.TextField('Earliest Article Date:')
+	size = fields.TextField('Number of Articles:')
 	submit = fields.SubmitField('Submit')
+
 
 @app.route('/', methods=["GET", "POST"])
 def index():
 	# need to assign input for business
 	form = DisplayForm()
-	summary = None
+	table_html = None
 
 	if form.validate_on_submit():
 		# store the submitted values
@@ -30,10 +33,15 @@ def index():
 		print(submitted_data)
 
 		# Retrieve values from form
-		text = submitted_data['text']
+		query_terms = submitted_data['query_terms']
+		query_date = submitted_data['query_date']
+		size = submitted_data['size']
+		
+    
+		# Return queried df
+		queried_df = kcs_process_query.query_generator(query_terms = query_terms,query_date=query_date,size=size)
 
-		# Return summary
-		summary = summarizer.textrank_summarizer(text)
+		table_html = queried_df.reset_index(drop=True).to_html(classes=['u-full-width'], index=False).replace('border="1"','border="0"')
 
-	return render_template('index.html',form=form,summary=summary) 
+	return render_template('index.html',data_table=table_html,form=form) 
 
